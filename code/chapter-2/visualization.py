@@ -18,7 +18,7 @@ import glob
 import os
 
 CLASS_INDEX = None
-CLASS_INDEX_PATH = '../imagenet_class_index.json'
+CLASS_INDEX_PATH = 'imagenet_class_index.json'
 
 model = VGG16(weights='imagenet', include_top=True, input_tensor=None, input_shape=None, pooling=None, classes=1000)
 
@@ -32,9 +32,7 @@ def decode_predictions_modified(preds, top=1):
         raise ValueError(
             '`decode_predictions` expects ' 'a batch of predictions ''(i.e. a 2D array of shape (samples, 1000)). ' 'Found array with shape: ' + str(preds.shape))
     if CLASS_INDEX is None:
-        fpath = get_file('imagenet_class_index.json',
-                         CLASS_INDEX_PATH, cache_subdir='models')
-        CLASS_INDEX = json.load(open(fpath))
+        CLASS_INDEX = json.load(open(CLASS_INDEX_PATH))
     results = []
     for pred in preds:
         top_indices = pred.argsort()[-top:][::-1]
@@ -115,6 +113,7 @@ def join_images(img1, img2):
 
 
 def process_image(image_path, output_path):
+    
     explainer = GradCAM()
 
     img = image.load_img(image_path, target_size=(224, 224))
